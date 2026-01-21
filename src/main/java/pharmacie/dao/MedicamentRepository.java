@@ -5,20 +5,26 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import pharmacie.entity.Medicament;
 
-// Cette interface sera auto-implémentée par Spring
 public interface MedicamentRepository extends JpaRepository<Medicament, Integer> {
-    /**
-     * Trouve un médicament à partir de son nom (unique dans Medicament)
-     * @return un médicament "optionnel"
-     */
-    Optional<Medicament>findByNom(String nom);
+    Optional<Medicament> findByNom(String nom);
+    // Recherche par valeur numérique (0 pour disponible, 1 pour indisponible)
+    List<Medicament> findByIndisponible(short status);
 
-    /**
-     * Trouve les médicaments disponibles (indisponible = false)
-     * @return la liste des médicaments disponibles
-     */
-    List<Medicament> findByIndisponibleFalse();
+    // Calcul des unités commandées par catégorie
+    @Query("SELECT l.medicament.nom as nom, SUM(l.quantite) AS unites " +
+           "FROM Ligne l " +
+           "WHERE l.medicament.categorie.code = :codeCategorie " +
+           "GROUP BY l.medicament.nom")
+    List<UnitesParMedicament> unitesCommandeesParCategorie(Integer codeCategorie);
+
+    // Médicaments disponibles (non indisponibles et stock >= commandés)
+    @Query("SELECT m FROM Medicament m " +
+           "WHERE m.categorie.code = :codeCat " +
+           "AND m.indisponible = 0 " +
+           "AND m.unitesEnStock >= m.unitesCommandees")
+    List<Medicament> findDisponiblesParCategorie(Integer codeCat);
 }

@@ -3,7 +3,6 @@ package pharmacie.entity;
 import java.util.LinkedList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,7 +39,7 @@ public class Categorie {
 
 	@ToString.Exclude
 	// CascadeType.ALL signifie que toutes les opérations CRUD sur la catégorie sont également appliquées à ses médicaments
-	@OneToMany(cascade = {CascadeType.ALL}, mappedBy = "categorie")
+	@OneToMany(mappedBy = "categorie")
 	private List<Medicament> medicaments = new LinkedList<>();
 
 }

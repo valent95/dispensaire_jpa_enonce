@@ -2,6 +2,7 @@ package pharmacie.entity;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -32,8 +33,8 @@ public class Dispensaire {
 
     @Embedded
     private AdressePostale adresse;
-
-    @OneToMany(mappedBy = "dispensaire")
+    
     @ToString.Exclude
+    @OneToMany(mappedBy = "dispensaire", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Commande> commandes;
 }

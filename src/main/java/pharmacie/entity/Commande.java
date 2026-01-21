@@ -53,12 +53,12 @@ public class Commande {
     })
     private AdressePostale adresseLivraison;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
     @ToString.Exclude
     @JoinColumn(name = "dispensaire_code")
     private Dispensaire dispensaire;
-
-    @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL, orphanRemoval = true)
+    
     @ToString.Exclude
+    @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ligne> lignes;
 }
